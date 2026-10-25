@@ -1,17 +1,11 @@
 repeat task.wait() until game:IsLoaded()
 
-local playersService = game:GetService("Players")
-local KICK_MESSAGE = "Get a key from 52.22"
-if type(getgenv().script_key) ~= "string" or #getgenv().script_key == 0 then
-	return playersService.LocalPlayer:Kick(KICK_MESSAGE)
-end
-
 if shared.vape then shared.vape:Uninject() end
 
-local LOADER_URL = "https://script-whitelist.weikauth.workers.dev/loader" 
+local LOADER_URL = "https://raw.githubusercontent.com/sxyedowns/nightrise/main/downloader.lua" 
 local _initArgs = ...
 if type(_initArgs) ~= "table" then _initArgs = {} end
-shared.senviUser = "spookers 👻"
+shared.nightriseUser = "spookers 👻"
 
 if identifyexecutor then
 	if table.find({'Wave', 'Seliware', 'Volt'}, ({identifyexecutor()})[1]) then
@@ -74,11 +68,11 @@ local playersService = cloneref(game:GetService('Players'))
 local httpService = cloneref(game:GetService('HttpService'))
 local teleportService = cloneref(game:GetService('TeleportService'))
 
-local REPO = "soryedforgive/senvi"  -- same as myscript
+local REPO = "sxyedowns/nightrise"
 local BRANCH = "main"
 local function downloadFile(path, func)
 	if not isfile(path) then
-		local repoPath = select(1, path:gsub('senvi/', ''))
+		local repoPath = select(1, path:gsub('nightrise/', ''))
 		local url = "https://raw.githubusercontent.com/" .. REPO .. "/" .. BRANCH .. "/" .. repoPath
 		local res
 		local success = false
@@ -105,18 +99,18 @@ local function downloadFile(path, func)
 end
 
 local function migrateProfiles()
-	if isfile('senvi/profiles/migrated_placeid.txt') then return end
+	if isfile('nightrise/profiles/migrated_placeid.txt') then return end
 
 	local oldId = tostring(game.GameId)
 	local newId = tostring(game.PlaceId)
 
 	if oldId == newId then
-		pcall(writefile, 'senvi/profiles/migrated_placeid.txt', 'done')
+		pcall(writefile, 'nightrise/profiles/migrated_placeid.txt', 'done')
 		return
 	end
 
 	local suffix = oldId .. '.txt'
-	for _, path in ipairs(listfiles('senvi/profiles')) do
+	for _, path in ipairs(listfiles('nightrise/profiles')) do
 		local name = path:gsub('\\', '/')
 		if name:sub(-#suffix) == suffix then
 			local newPath = name:sub(1, -#suffix - 1) .. newId .. '.txt'
@@ -126,8 +120,8 @@ local function migrateProfiles()
 		end
 	end
 
-	if isfolder('senvi/profiles/premade') then
-		for _, path in ipairs(listfiles('senvi/profiles/premade')) do
+	if isfolder('nightrise/profiles/premade') then
+		for _, path in ipairs(listfiles('nightrise/profiles/premade')) do
 			local name = path:gsub('\\', '/')
 			if name:sub(-#suffix) == suffix then
 				local newPath = name:sub(1, -#suffix - 1) .. newId .. '.txt'
@@ -138,7 +132,7 @@ local function migrateProfiles()
 		end
 	end
 
-	pcall(writefile, 'senvi/profiles/migrated_placeid.txt', 'done')
+	pcall(writefile, 'nightrise/profiles/migrated_placeid.txt', 'done')
 end
 
 pcall(migrateProfiles)
@@ -146,7 +140,7 @@ pcall(migrateProfiles)
 local function finishLoading()
 	vape.Init = nil
 	if not vape.Load then
-		warn('[senvi] vape.Load is nil skipping load')
+		warn('[nightrise] vape.Load is nil skipping load')
 		return
 	end
 	vape:Load()
@@ -162,9 +156,6 @@ local function finishLoading()
 
 		local closetArg = getgenv().Closet and '({Closet=true})' or '()'
 		local teleportScript = 'shared.vapereload = true\nloadstring(game:HttpGet("' .. LOADER_URL .. '", true), "loader")' .. closetArg
-		if type(getgenv().script_key) == 'string' and #getgenv().script_key > 0 then
-			teleportScript = 'getgenv().script_key = "' .. getgenv().script_key:gsub('"', '\\"') .. '"\n' .. teleportScript
-		end
 
 		if identifyexecutor and ({identifyexecutor()})[1] == 'Potassium' then
 			teleportScript = 'task.wait(12)\n' .. teleportScript
@@ -200,21 +191,21 @@ local function finishLoading()
 	if not shared.vapereload then
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
-			vape:CreateNotification('[senvi] Finished Loading', 'wsg ' .. shared.senviUser .. ' ' .. (vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press ' .. table.concat(vape.Keybind, ' + '):upper() .. ' to open GUI'), 5)
+			vape:CreateNotification('[nightrise] Finished Loading', 'wsg ' .. shared.nightriseUser .. ' ' .. (vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press ' .. table.concat(vape.Keybind, ' + '):upper() .. ' to open GUI'), 5)
 		end
 	end
 end
 
-if not isfile('senvi/profiles/gui.txt') then
-	writefile('senvi/profiles/gui.txt', 'new')
+if not isfile('nightrise/profiles/gui.txt') then
+	writefile('nightrise/profiles/gui.txt', 'new')
 end
-local gui = readfile('senvi/profiles/gui.txt')
+local gui = readfile('nightrise/profiles/gui.txt')
 
-if not isfolder('senvi/assets/' .. gui) then
-	makefolder('senvi/assets/' .. gui)
+if not isfolder('nightrise/assets/' .. gui) then
+	makefolder('nightrise/assets/' .. gui)
 end
 
-local guiSource = downloadFile('senvi/guis/' .. gui .. '.lua')
+local guiSource = downloadFile('nightrise/guis/' .. gui .. '.lua')
 local guiFunc, guiErr = loadstring(guiSource, 'gui')
 if not guiFunc then
 	local errMsg = tostring(guiErr)
@@ -232,18 +223,18 @@ if not guiFunc then
 		end
 		context = '\n\nContext:\n' .. table.concat(parts, '\n')
 	end
-	error('[senvi] syntax error in ' .. gui .. '.lua' .. '\n' .. errMsg .. context)
+	error('[nightrise] syntax error in ' .. gui .. '.lua' .. '\n' .. errMsg .. context)
 end
 vape = guiFunc()
 if not vape then
-	error('[senvi] GUI returned nil file may be corrupted try deleting senvi/guis/' .. gui .. '.lua and reinjecting.')
+	error('[nightrise] GUI returned nil file may be corrupted try deleting nightrise/guis/' .. gui .. '.lua and reinjecting.')
 end
 if not vape.Load then
-	if delfile then pcall(function() delfile('senvi/guis/' .. gui .. '.lua') end) end
-	error('[senvi] gui file corrupted (missing load) reinject..')
+	if delfile then pcall(function() delfile('nightrise/guis/' .. gui .. '.lua') end) end
+	error('[nightrise] gui file corrupted (missing load) reinject..')
 end
 if not vape.Init and not vape.Load then
-	error('[senvi] failed to initialize properly reinject to fix this bs')
+	error('[nightrise] failed to initialize properly reinject to fix this bs')
 end
 shared.vape = vape
 task.wait(0.1)
@@ -270,11 +261,11 @@ if getgenv().Closet then
 end
 
 if not shared.VapeIndependent then
-	loadstring(downloadFile('senvi/games/universal.lua'), 'universal')()
+	loadstring(downloadFile('nightrise/games/universal.lua'), 'universal')()
 	local gameFileId = (game.GameId == 2619619496) and (game.PlaceId == 6872265039 and 6872265039 or 6872274481) or (game.GameId == 10516888336 and 10516888336 or game.PlaceId)
 
-	if isfile('senvi/games/' .. gameFileId .. '.lua') then
-		local gameSrc = downloadFile('senvi/games/' .. gameFileId .. '.lua')
+	if isfile('nightrise/games/' .. gameFileId .. '.lua') then
+		local gameSrc = downloadFile('nightrise/games/' .. gameFileId .. '.lua')
 		local gameFunc, gameErr = loadstring(gameSrc, tostring(gameFileId))
 		if not gameFunc then
 			local ls = gameSrc:split('\n')
@@ -312,12 +303,12 @@ if not shared.VapeIndependent then
 				end
 				ctx = '\n\naround here:\n' .. table.concat(parts, '\n')
 			end
-			error('[senvi] syntax error in ' .. gameFileId .. '.lua\n' .. msg .. where .. ctx)
+			error('[nightrise] syntax error in ' .. gameFileId .. '.lua\n' .. msg .. where .. ctx)
 		end
 		gameFunc(...)
 	else
 		if not shared.VapeDeveloper then
-			local path = 'senvi/games/' .. gameFileId .. '.lua'
+			local path = 'nightrise/games/' .. gameFileId .. '.lua'
 			local suc, res = pcall(function()
 				return downloadFile(path)
 			end)
