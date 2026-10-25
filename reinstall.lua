@@ -1,6 +1,6 @@
 local commit
 pcall(function()
-	commit = readfile('senvi/profiles/commit.txt')
+	commit = readfile('nightrise/profiles/commit.txt')
 end)
 
 local function wipe(path)
@@ -14,18 +14,19 @@ local function wipe(path)
 	end
 end
 
-if isfolder('senvi') then
-	wipe('senvi')
+if isfolder('nightrise') then
+	wipe('nightrise')
 end
 
 pcall(function()
 	game:GetService('StarterGui'):SetCore('SendNotification', {
-		Title = 'senvi',
-		Text = 'deleted senvi, reinjecting now',
+		Title = 'nightrise',
+		Text = 'deleted nightrise, reinjecting now',
 		Duration = 4
 	})
 end)
 
 task.wait(0.67)
 
-loadstring(game:HttpGet('https://raw.githubusercontent.com/soryedforgive/senvi/'..(commit or 'main')..'/main.lua', true))()
+-- Points to sxyedowns/nightrise
+loadstring(game:HttpGet('https://raw.githubusercontent.com/sxyedowns/nightrise/'..(commit or 'main')..'/main.lua', true))()
